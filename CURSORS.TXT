@@ -1,0 +1,98 @@
+
+IMPLICIT CURSORS :
+
+Select * from customers;  
++----+----------+-----+-----------+----------+ 
+ | ID  | NAME     | AGE | ADDRESS | SALARY | 
++----+----------+-----+-----------+----------+ 
+|  1 | Prasanthi      |  32 | Ahmedabad  |  2000.00  | 
+|  2 | Haritha         |  25 | Delhi            |  1500.00  | 
+|  3 | Sandhya       |  23 | Kota            |  2000.00  | 
+|  4 | Mahi            |  25 | Mumbai        |  6500.00  | 
+|  5 | Hari             |  27 | Bhopal          |  8500.00  | 
+|  6 | Jyo              |  22 | MP               |  4500.00   | 
++----+----------+-----+-----------+----------+  
+
+DECLARE  
+   total_rows number(2); 
+BEGIN 
+   UPDATE customers 
+   SET salary = salary + 500; 
+   IF sql%notfound THEN 
+      dbms_output.put_line('no customers selected'); 
+   ELSIF sql%found THEN 
+      total_rows := sql%rowcount;
+      dbms_output.put_line( total_rows || ' customers selected '); 
+   END IF;  
+END; 
+/ 
+
+OUTPUT :
+
+6 customers selected  
+
+PL/SQL procedure successfully completed. 
+
+RESULT TABLE :
+
+Select * from customers;  
+
++----+----------+-----+-----------+----------+ 
+ | ID  | NAME     | AGE | ADDRESS | SALARY | 
++----+----------+-----+-----------+----------+ 
+|  1 | Prasanthi      |  32 | Ahmedabad  |  2500.00  | 
+|  2 | Haritha         |  25 | Delhi            |  2000.00  | 
+|  3 | Sandhya       |  23 | Kota            |  2500.00  | 
+|  4 | Mahi            |  25 | Mumbai        |  7000.00  | 
+|  5 | Hari             |  27 | Bhopal          |  9000.00  | 
+|  6 | Jyo              |  22 | MP               |  5000.00   | 
++----+----------+-----+-----------+----------+  
+
+EXPLICIT CURSORS :
+
+DECLARE 
+   c_id customers.id%type; 
+   c_name customer.name%type; 
+   c_addr customers.address%type; 
+   CURSOR c_customers is 
+      SELECT id, name, address FROM customers; 
+BEGIN 
+   OPEN c_customers; 
+   LOOP 
+   FETCH c_customers into c_id, c_name, c_addr; 
+      EXIT WHEN c_customers%notfound; 
+      dbms_output.put_line(c_id || ' ' || c_name || ' ' || c_addr); 
+   END LOOP; 
+   CLOSE c_customers; 
+END; 
+/
+
+OUTPUT :
+
+1 Prasanthi Ahmedabad  
+2 Haritha Delhi  
+3 Sandhya Kota     
+4 Mahi Mumbai  
+5 Hari  Bhopal   
+6 Jyo MP  
+  
+PL/SQL procedure successfully completed. 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
