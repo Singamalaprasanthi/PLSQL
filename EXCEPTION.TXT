@@ -1,0 +1,79 @@
+
+
+Select * from customers;  
++----+----------+-----+-----------+----------+ 
+ | ID  | NAME     | AGE | ADDRESS | SALARY | 
++----+----------+-----+-----------+----------+ 
+|  1 | Prasanthi      |  32 | Ahmedabad  |  2000.00  | 
+|  2 | Haritha         |  25 | Delhi            |  1500.00  | 
+|  3 | Sandhya       |  23 | Kota            |  2000.00  | 
+|  4 | Mahi            |  25 | Mumbai        |  6500.00  | 
+|  5 | Hari             |  27 | Bhopal          |  8500.00  | 
+|  6 | Jyo              |  22 | MP               |  4500.00   | 
++----+----------+-----+-----------+----------+  
+
+
+EXAMPLE 1 :
+
+DECLARE 
+   c_id customers.id%type := 8; 
+   c_name customerS.Name%type; 
+   c_addr customers.address%type; 
+BEGIN 
+   SELECT  name, address INTO  c_name, c_addr 
+   FROM customers 
+   WHERE id = c_id;  
+   DBMS_OUTPUT.PUT_LINE ('Name: '||  c_name); 
+   DBMS_OUTPUT.PUT_LINE ('Address: ' || c_addr); 
+
+EXCEPTION 
+   WHEN no_data_found THEN 
+      dbms_output.put_line('No such customer!'); 
+   WHEN others THEN 
+      dbms_output.put_line('Error!'); 
+END; 
+/
+
+OUTPUT :
+
+No such customer!  
+
+PL/SQL procedure successfully completed.
+
+EXAMPLE 2 :
+
+DECLARE 
+   c_id customers.id%type := &cc_id; 
+   c_name customerS.Name%type; 
+   c_addr customers.address%type;  
+   -- user defined exception 
+   ex_invalid_id  EXCEPTION; 
+BEGIN 
+   IF c_id <= 0 THEN 
+      RAISE ex_invalid_id; 
+   ELSE 
+      SELECT  name, address INTO  c_name, c_addr 
+      FROM customers 
+      WHERE id = c_id;
+      DBMS_OUTPUT.PUT_LINE ('Name: '||  c_name);  
+      DBMS_OUTPUT.PUT_LINE ('Address: ' || c_addr); 
+   END IF; 
+
+EXCEPTION 
+   WHEN ex_invalid_id THEN 
+      dbms_output.put_line('ID must be greater than zero!'); 
+   WHEN no_data_found THEN 
+      dbms_output.put_line('No such customer!'); 
+   WHEN others THEN 
+      dbms_output.put_line('Error!');  
+END; 
+/
+
+OUTPUT :
+
+Enter value for cc_id: -5
+old  2: c_id customers.id%type := &cc_id; 
+new  2: c_id customers.id%type := -5; 
+ID must be greater than zero! 
+ 
+PL/SQL procedure successfully completed. 
